@@ -1,0 +1,10 @@
+\newpage
+\begin{flushleft}
+{\LARGE{\textbf{{Conclusion and Outlook}}}}
+\end{flushleft}
+In the article, the $hp$-DG method with Dynamical meshes was introduced, the implementation (algorithm) described, and successfully applied to Nonstationary Euler Equations of Compressible Flow with satisfying results.
+\begin{enumerate}
+\item The semi-implicit scheme, though deemed to be unconditionally stable does not behave in this way for all problems. Some time-dependent problems require the time step to be rather small in order to satisfy the CFL condition. Further analysis of stability of this method would be required and fully implicit scheme should be studied.
+\item We have to be aware that more challenges for $hp$-adaptivity algorithms appear in 3-dimensional setting (more ways to refine an element, more integration points for higher order elements), but interesting applications usually require the 3-dimensional setting
+\item Althought the hp-DG algorithms in the Hermes library utilize parallel computation in the shared memory environment, the use of domain decomposition, and parallelization in a large scale is another step to capability of solving real world large scale problems.
+\end{enumerate}

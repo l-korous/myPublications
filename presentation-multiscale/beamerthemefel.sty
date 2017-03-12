@@ -1,0 +1,86 @@
+\usetheme{Rochester}
+
+\beamertemplatenavigationsymbolsempty
+
+% color scheme
+\definecolor{felblue}{RGB}{32,76,161}
+\definecolor{fellightgray}{RGB}{200,200,200}
+\definecolor{feldarkgray}{RGB}{75,75,75}
+
+\setbeamercolor*{titlebar}{fg=felblue}
+\setbeamercolor*{frametitle}{parent=titlebar}
+\setbeamercolor*{normal text}{fg=feldarkgray}
+\setbeamercolor*{headerbar}{}
+\setbeamercolor{section in head/foot}{bg=fellightgray, fg=felblue}
+\setbeamertemplate{section in head/foot shaded}[default][60]
+\setbeamercolor*{footerbar}{bg=fellightgray,fg=felblue}
+
+\usecolortheme[named=felblue]{structure}
+
+% font
+\setbeamerfont{section in head/foot}{size=\tiny,series=\normalfont}
+\setbeamerfont{frametitle}{size=\Large}
+\setbeamerfont{framesubtitle}{size=\scriptsize}
+
+% title
+\setbeamertemplate{frametitle}
+{
+	\vskip-0.25\beamer@headheight
+	\vskip-\baselineskip
+	\vskip-5pt
+	\hskip75pt\usebeamerfont*{frametitle}\insertframetitle
+	\vskip-1pt
+	\hskip76pt\usebeamerfont*{framesubtitle}\insertframesubtitle
+}
+
+% header
+\pgfdeclareimage[height=.2\paperheight]{fel}{fel}
+\setbeamertemplate{headline}
+{
+	\pgfuseimage{fel}
+	\vskip-.2\paperheight
+	\linethickness{0pt}
+
+	\framelatex{
+	\begin{beamercolorbox}
+	[rightskip=1.5em,wd=\paperwidth,ht=.2\beamer@headheight]
+	{headerbar}
+		\usebeamerfont{section in head/foot}
+		\insertsectionnavigationhorizontal{.975\textwidth}{\hskip0em plus1filll}{}
+	\end{beamercolorbox}
+	}
+
+	\framelatex{
+	\begin{beamercolorbox}
+	[wd=\paperwidth,ht=.8\beamer@headheight]
+	{titlebar}
+	\end{beamercolorbox}
+	}
+}
+
+% footer
+\setbeamertemplate{footline}
+{
+	\framelatex{	
+	\begin{beamercolorbox}
+	[wd=\paperwidth,ht=.3\beamer@headheight,sep=.075\beamer@headheight]
+	{footerbar}
+		\usebeamerfont{section in head/foot}
+		\insertframenumber/\inserttotalframenumber
+		\hfill\insertshortauthor : \inserttitle
+	\end{beamercolorbox}
+	}
+}
+
+% automatic titles and subtitles of frames
+\addtobeamertemplate{frametitle}{
+   \let\insertframetitle\insertsectionhead}{}
+\addtobeamertemplate{frametitle}{
+   \let\insertframesubtitle\insertsubsectionhead}{}
+
+\makeatletter
+  \CheckCommand*\beamer@checkframetitle
+  {\@ifnextchar\bgroup\beamer@inlineframetitle{}}
+  \renewcommand*\beamer@checkframetitle
+  {\global\let\beamer@frametitle\relax\@ifnextchar\bgroup\beamer@inlineframetitle{}}
+\makeatother

@@ -1,0 +1,11 @@
+\addcontentsline{toc}{section}{Introduction}
+
+\begin{flushleft}
+{\LARGE{\textbf{{Introduction}}}}
+\end{flushleft}
+
+Discontinuous Galerkin Finite Element methods (DG methods) form a class of numerical methods for solving partial differential equations. They combine features of the finite element and the finite volume framework and have been successfully applied to hyperbolic, elliptic and parabolic problems arising from a wide range of applications. DG methods have in particular received considerable interest for problems with a dominant first-order part, e.g. in electrodynamics, fluid mechanics and plasma physics.
+
+The DG method is very demanding in terms of number of degrees of freedom (DOFs), and thus in terms of the sizes of the linear systems we have to solve. Therefore, techniques to reduce these sizes while keeping sufficiently high quality of the solution of the problems we solve using the DG method are very interesting. One of the most advanced techniques that is the focus of this paper combines two approaches, adptivity in space, and in time, and is called $hp$-adaptivity.
+
+The technique, together with DG capabilities has been recently implemented in the open source hp-FEM framework Hermes (http://www.hpfem.org/hermes), and the results presented in this article were obtained using Hermes.

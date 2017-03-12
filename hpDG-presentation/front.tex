@@ -1,0 +1,42 @@
+\begin{frontmatter}
+
+\title{Solving a Suite of NIST Benchmark \\Problems with Hermes}
+
+%% use optional labels to link authors explicitly to addresses:
+\author[label1]{Zhonghua Ma}
+\ead{mazhonghua83@gmail.com}
+\author[label2]{Lukas Korous}
+\ead{lukas.korous@gmail.com}
+\author[label3]{Erick Santiago}
+\ead{laviticus@sbcglobal.net}
+\address[label1]{China University of Petroleum, Beijing, China}
+\address[label2]{Charles University, Prague, Czech Republic}
+\address[label3]{University of Nevada, Reno, USA}
+
+\begin{abstract}
+Adaptive grid refinement is a critical component of algorithms for the numerical solution of partial differential equations (PDEs).
+The development of new algorithms and computer
+codes for the solution of PDEs usually involves the use of proof-of-concept test problems.
+
+It is common to compare different algorithms using a large test set, to evaluate the algorithm's overall quality, which lies in the ability to handle all kinds of problems, and also to determine the algorithm's strengths and weaknesses.
+
+In this paper we solve a set of benchmark problems devised by
+W. Mitchel at NIST \cite{mitchell-1}.
+The problems exhibit various types of singularities, disruptions, and oscillations.
+
+Each of the benchmark problem is introduced, together with its exact solution.
+Then the solution obtained with the use of the multi-platform open source
+C++ library for rapid development of adaptive $hp$-FEM and $hp$-DG solvers {\sc Hermes}\footnote{http://hpfem.org/hermes} is shown,
+complemented with convergence graphs and comparison of the fully anisotropic
+$hp$-FEM to low-order FEM in terms of convergence.
+Overview of Hermes is given in the appendix.
+\end{abstract}
+
+\begin{keyword}
+$hp$-FEM \sep FEM benchmark \sep anisotropic solution \sep test problems \sep finite element method \sep Hermes \sep Hermes2D
+%% keywords here, in the form: keyword \sep keyword
+%% MSC codes here, in the form: \MSC code \sep code
+%% or \MSC[2008] code \sep code (2000 is the default)
+\end{keyword}
+
+\end{frontmatter}

@@ -1,0 +1,97 @@
+\vspace{5mm}
+\section{Discontinuous Galerkin discretization of the Euler equations}
+\label{sec:DGEuler}
+This section describes only important parts of the process of DG discretization of the Euler equations. The description of the semi-implicit time integration (\cite{DF04}), and linearization, are omitted here.
+\subsection{Discontinuous Galerkin space semidiscretization}
+We approximate fluxes through the element faces $\Gamma_{ij}$ with the aid of a numerical flux $\bs{H}=\bs{H}(\uu,\w,\nn)$ in the form
+\begin{equation} \label{eq:5}
+\int_{\Gamma_{ij}}  \sum_{s=1}^2\,\f_s(\w(t))\,{(n_{ij})}_s\cdot \boldsymbol{\varphi}_h \,d S
+ \approx
+\int_{\Gamma_{ij}} 
+\bs{H}(\w_h(t)|_{\Gamma_{ij}}, \w_h(t)|_{\Gamma_{ji}},\nn_{ij})\cdot\boldsymbol{\varphi}_h\,d S.
+\end{equation}
+
+\subsection{Numerical fluxes}
+  The DGFEM discretization of the Euler equations in their conservative form follows the principles of the section~\ref{sec:DG}. See~\cite{1993} for details of derivation of the following numerical fluxes.
+\begin{enumerate}
+\item \emph{The Steger-Warming scheme} has the numerical flux:
+$$ \bs{H}_{SW}\lo\bs{u},\bs{v},\bs{n}\ro = \mathbb{P}^+\lo\bs{u},\bs{n}\ro\bs{u} + \mathbb{P}^-\lo\bs{v},\bs{n}\ro\bs{v},\ \ \bs{u},\bs{v}\in D,\ \bs{n}\in\mc{S}_1.$$
+This scheme is rather diffusive, so another scheme is preferred.
+\item  \emph{The Vijayasundaram scheme} has the numerical flux:
+$$ \bs{H}_{V}\lo\bs{u},\bs{v},\bs{n}\ro = \mathbb{P}^+\lo\frac{\bs{u} + \bs{v}}{2},\bs{n}\ro\bs{u} + \mathbb{P}^-\lo\frac{\bs{u} + \bs{v}}{2},\bs{n}\ro\bs{v},\ \ \bs{u},\bs{v}\in D,\ \bs{n}\in\mc{S}_1.$$
+\end{enumerate}
+
+\subsection{Boundary conditions}
+\label{sec:bnd}
+In both examples in the next chapter, the boundary of the computational domain $\Omega$ is divided into three parts.
+\begin{enumerate}
+\item On a fixed impermeable wall $\Gamma_W\subset\partial\Omega$ we use the condition $\bs{v}\cdot\bs{n} = 0$. Then the flux $\mc{P}\lo\bs{w},\bs{n}\ro$, defined as $\sum_{s=1}^2\mathbb{A}_s\lo\bs{w}\ro n_s$, has the form
+\begin{eqnarray}
+\mc{P}\lo\bs{w},\bs{n}\ro & = & \sum_{s=1}^2\bs{f}_s\lo\bs{w}\ro n_s \\ & = & \lo\bs{v}\cdot\bs{n}\ro\bs{w} + p \lo 0, n_1, n_2, \bs{v}\cdot\bs{n}\ro^T \\ & = & p\lo 0, n_1, n_2, 0\ro^T,
+\end{eqnarray}
+which is uniquely determined on $\Gamma_W$ by the extrapolated value of the pressure, i.e. by $p_j^k := p_i^k$. Therefore, on the part $\Gamma_W$ of the boundary we define the numerical flux
+\be
+\bs{H}\lo\bs{w}_i^k, \bs{w}_j^k, \bs{n}\ro = p_i^k\lo 0, n_1, n_2, 0\ro^T.
+\ee
+Oon the impermeable part of the boundary, we prescribe only $\bs{v}\cdot\bs{n} = 0$, and extrapolate the pressure. For details, see~\cite{hyp06}.
+\item
+On the inlet
+$$
+\Gamma_I\lo t \ro = \left\{x\in\partial\Omega; \bs{v}\lo x, t\ro \cdot \bs{n}\lo x \ro < 0\right\}
+$$
+and the outlet
+$$
+\Gamma_O\lo t \ro = \left\{x\in\partial\Omega; \bs{v}\lo x, t\ro \cdot \bs{n}\lo x \ro > 0\right\}
+$$
+parts of the boundary it is necessary to use nonreflecting boundary conditions. In this case we used the so-called \emph{characteristics-based} bounadry conditions, according to~\cite{hyp06}.
+\end{enumerate}
+\subsection{Shock capturing}
+\label{subsec:shock}
+For the flow containing discontinuities we need to employ suitable stabilization technique to avoid spurious overshoots and undershoots in computed solutions near the discontinuities. This phenomenon does not occur in low Mach number regimes, but in transonic flow it causes instabilities in the numerical solution.
+\paragraph{}
+Two approaches will be presented and later used in the numerical examples. The first one, the so-called \emph{vertex based limiter} is taken from~\cite{Kuzmin}. The second one, based on adding \emph{artificial viscosity} into the system of equations is taken from~\cite{hyp06}.
+\subsubsection{Vertex based limiter}
+\label{sec:vertex_limiter}
+The vertex based limiter is based on a simple idea of limiting the slope of the solution on an element by limiting
+the polynomial degree of approximation used on that element. Let $v$ be a component of the numerical solution. Given an element $K_i\in\mc{T}_h$, the value of the solution on $K_i$ in the center of gravity of $K_i$, denoted by $v^c_i$, and the average value of the gradient of the solution in the center of gravity, denoted by $\lo\nabla v\ro^c_i$, the goal is to determine the maximum admissible slope for a constrained reconstruction of the form
+\be
+\label{corr_factors}
+v_h\lo\bs{x}\ro = v^c_i +\alpha_i\lo\nabla v\ro^c_i \cdot \lo\bs{x} - \bs{x}^c_i\ro,\ \ 0\leq\alpha_i\leq 1,\ \bs{x}\in K_i,
+\ee
+where $\bs{x}^c_i$ is the center of gravity of $K_i$. The correction factor $\alpha_i$ is defined so that the final solution values at the vertices of $K_i$, denoted in what follows as $\bs{x}_{i,j},\ j = 1, ...,\mbox{ number of vertices}$, are bounded by the maximum and minumum values of $v$ in all elements sharing the vertex $\bs{x}_{i,j}$. We define these values as $v_{i,j}^{\max}, v_{i,j}^{\min}$.
+
+The elementwise correction factors $\alpha_i$ for~\ref{corr_factors} guarantee that
+\be
+v_{i,j}^{\min}\leq v\lo\bs{x}_{i,j}\ro\leq v_{i,j}^{\max},\ \forall j.
+\ee
+This vertex-based condition can be enforced using
+\be
+\alpha_i = \min_j
+\begin{cases}
+\min\left\{1,\frac{v_{i,j}^{\max} - v^c_i}{v\lo\bs{x}_{i,j}\ro - v^c_i}\right\},\ \mbox{if } v\lo\bs{x}_{i,j}\ro - v^c_i > 0,\\
+1,\\
+\min\left\{1,\frac{v_{i,j}^{\min} - v^c_i}{v\lo\bs{x}_{i,j}\ro - v^c_i}\right\},\ \mbox{if } v\lo\bs{x}_{i,j}\ro - v^c_i < 0.\\
+\end{cases}
+\ee
+Higher order terms are handled using similar ideas.
+
+\subsubsection{Limiter based on adding artificial viscosity}
+\label{sec:limiter_feist}
+First part of this approach is introducing the discontinuity indicator $g\lo i \ro$ proposed in~\cite{DFS03} and defined by
+\be
+g\lo i \ro = \int_{\partial K_i}\left[\rho_h^k\right]^2 dS / \lo h_{K_i}|K_i|^{3/4}\ro,\ K_i\in\mc{T}_h.
+\ee
+Further we define the discrete indicator
+\be
+G\lo i \ro = 0 \mbox{ if } g\lo i \ro <1 \mbox{ and } G\lo i \ro = 1 \mbox{ if } g\lo i \ro \geq 1,\ \ K_i\in\mc{T}_h.
+\ee
+To the left hand-side of linearized equations (see~\cite{DF04}), we add the \emph{artificial viscosity forms}
+\be
+\beta_h\lo\bs{w}_h^k, \bs{w}_h^{k+1},\boldsymbol{\varphi}\ro = \nu_1\sum_{i\in I} h_{K_i} G^k\lo i \ro \int_{K_i}\nabla\bs{w}_h^{k+1}\cdot\nabla\boldsymbol{\varphi} d\bs{x}
+\ee
+and
+\be
+J_h\lo\bs{w}_h^{k},\bs{w}_h^{k+1},\boldsymbol{\varphi}\ro = \nu_2\sum_{i\in I}\sum_{j\in s\lo i \ro}\frac12\lo G^k\lo i \ro + G^k\lo j\ro\ro\int_{\Gamma_{ij}}\left[\bs{w}_h^{k+1}\right]\cdot\left[\boldsymbol{\varphi}\right] dS,
+\ee
+where $\nu_1, \nu_2 \approx 1$.
+An important characteristic of this approach is that $G\lo i \ro$ vanishes in regions, where the solution is regular. Therefore, the scheme does not produce any nonphysical entropy in these regions.

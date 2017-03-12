@@ -1,0 +1,42 @@
+\frametitle {Hermes PDE-independent hp-adaptive algorithm for DG}
+\begin{Verbatim}[commandchars=\\\{\}, fontsize=\Tinyc]
+ 1 \textcolor{blue}{while}(!done)
+ 2 \{
+ 3   ref_spaces = construct_ref_spaces(&space_rho, &space_rho_v_x, &space_rho_v_y, &space_e)\textcolor{blue}{;}
+ 4
+ 5   \textcolor{mygreen}{// Uses the assembling algorithm & linear algebraic routines from TPLs.}
+     \textcolor{mygreen}{// "solver" is either LinearSolver<double>, or NewtonSolver<double>, or PicardSolver<double>.}
+ 6   solver.solve(ref_spaces_const)\textcolor{blue}{;}
+ 7
+ 8   \textcolor{mygreen}{// Here, the flux_limiter stands for an implementation of flux limiter,}
+     \textcolor{mygreen}{// in the example that follows, limiter according to}
+     \textcolor{mygreen}{// \em{D. Kuzmin.: {\em A vertex-based hierarchical slope limiter for p-adaptive discontinuous Galerkin methods}}},
+     \textcolor{mygreen}{// \em{J. Comput. Appl. Math., \textbf{233(12)}, 3077-3085, 2010.} was used.}
+ 9   flux_limiter.limit_according_to_detector(&space_rho, &space_rho_v_x, &space_rho_v_y, &space_e)\textcolor{blue}{;}
+10   flux_limiter.get_limited_solutions(&rsln_rho, &rsln_rho_v_x, &rsln_rho_v_y, &rsln_e)\textcolor{blue}{;}
+11
+12   OGProjection<double>::project_global([&space_rho, &space_rho_v_x, &space_rho_v_y, &space_e],
+       [&rsln_rho, &rsln_rho_v_x, &rsln_rho_v_y, &rsln_e], [&sln_rho, &sln_rho_v_x, &sln_rho_v_y, &sln_e])\textcolor{blue}{;}
+13
+14   \textcolor{mygreen}{// Calculate the errors and create list of Elements accordingly.}
+15   if(adaptivity->calc_error_estimate([&sln_rho, &sln_rho_v_x, &sln_rho_v_y, &sln_e],
+           [&rsln_rho, &rsln_rho_v_x, &rsln_rho_v_y, &rsln_e]) < threshold) \{ done = true\textcolor{blue}{;} break\textcolor{blue}{;} \}
+16
+17  \Tiny \textcolor{mygreen}{// Adapt.}
+18  \Tiny \textcolor{blue}{#pragma} omp \textcolor{blue}{parallel} shared(...) ...
+19  \Tiny \{
+20  \Tiny \textcolor{blue}{#pragma} omp \textcolor{blue}{for} schedule(dynamic, CHUNKSIZE)
+21    \Tiny \textcolor{blue}{for}(element = 0\textcolor{blue}{;} element < element.size()\textcolor{blue}{;} element++)
+22    \Tiny \{
+23      \Tiny \textcolor{blue}{if}(adaptive_strategy.done) \textcolor{blue}{break\textcolor{blue}{;}}
+24     \Tiny  refinement_selectors = global_refinement_selectors[thread_id]\textcolor{blue}{;}
+25     \Tiny  rslns = rslns[thread_id]\textcolor{blue}{;}
+26
+27     \Tiny  refinement_selectors->create_candidates(element, rslns, "user settings")\textcolor{blue}{;}
+28    \Tiny   refinement_selectors->evaluate_candidates(element, rslns, &avg_error, &dev_error)\textcolor{blue}{;}
+29    \Tiny   refinement_selectors->select_best_candidate(element, avg_error, dev_error)\textcolor{blue}{;}
+30   \Tiny  \}
+31  \Tiny \}
+32 \Tiny  adaptivity->apply_refinements([&space_rho, &space_rho_v_x, &space_rho_v_y, &space_e])\textcolor{blue}{;}
+33 \}
+\end{Verbatim}

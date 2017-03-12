@@ -1,0 +1,78 @@
+\RequirePackage{fix-cm}
+%
+%\documentclass{svjour3}                     % onecolumn (standard format)
+%\documentclass[smallcondensed]{svjour3}     % onecolumn (ditto)
+\documentclass[smallextended]{svjour3}       % onecolumn (second format)
+%\documentclass[twocolumn]{svjour3}          % twocolumn
+%
+\smartqed  % flush right qed marks, e.g. at end of proof
+%
+\usepackage{graphicx}
+\renewcommand{\subsectionmark}[1]{\markright{#1}{}}
+%
+% \usepackage{mathptmx}      % use Times fonts if available on your TeX system
+%
+% insert here the call for the packages your document requires
+%\usepackage{latexsym}
+% etc.
+%
+% please place your own definitions here and don't use \def but
+% \newcommand{}{}
+%
+% Insert the name of "your journal" with
+% \journalname{myjournal}
+%
+\usepackage{amssymb,amsmath}
+\usepackage{float}
+\frenchspacing
+\pagenumbering{arabic}
+\oddsidemargin  0.3in	% levy okraj stranky; pripocte se 1 inch
+\evensidemargin 0.2in	% pravy okraj stranky; pripocte se 1 inch
+\textwidth      5.8in	% sirka textu
+\headheight     0.0in	% vyska hlavicky
+\topmargin      0.2in	% horni okraj
+\textheight     8.5in	% vyska textu
+\begin{document}
+
+\include{commands}
+
+
+\title{to be inserted}
+
+
+%% use optional labels to link authors explicitly to addresses:
+\author{Luk\' a\v s Korous \and Pavel \v Sol\' in \and Pavel Karban \and Franti\v sek Mach \and Pavel K\r us}
+
+\institute{L. Korous \at
+Department of Theory of Electrical Engineering, Faculty of Electrical Engineering, University of West Bohemia\\
+\email{korous@rice.zcu.cz}
+\and
+P. \v Sol\' in \at
+Department of Mathematics and Statistics, University of Nevada, Reno, USA\\
+Institute of Thermomechanics, Academy of Sciences of the Czech Republic, Prague\\
+\email{solin@unr.edu}
+\and
+P. Karban \at
+Department of Theory of Electrical Engineering, Faculty of Electrical Engineering, University of West Bohemia\\
+\email{karban@kte.zcu.cz}
+\and
+F. Mach \at
+Department of Theory of Electrical Engineering, Faculty of Electrical Engineering, University of West Bohemia\\
+\email{fmach@kte.zcu.cz}
+\and
+P. K\r us \at
+Department of Theory of Electrical Engineering, Faculty of Electrical Engineering, University of West Bohemia\\
+\email{pkus@rice.zcu.cz}
+}
+
+\date{Received: date / Accepted: date}
+
+\maketitle
+
+\include{introduction}
+\include{examples}
+
+\include{acknowledgment}
+\input{bibliography}
+
+\end{document}
